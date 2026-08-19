@@ -3,11 +3,13 @@
 
 #include "engine/command/command.h"
 #include "engine/render/render.h"
+#include "engine/turn/turn.h"
 #include "engine/world/world.h"
 
 typedef struct {
     World world;
     RenderBuffer render_buffer;
+    TurnManager turn_manager;
     int finished;
 } Game;
 
