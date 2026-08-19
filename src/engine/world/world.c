@@ -11,7 +11,7 @@ static int world_find_free_tile(const World *world, Position origin, Position *r
         return 0;
     }
 
-    for (radius = 1; radius < WORLD_MAX_WIDTH + WORLD_MAX_HEIGHT; ++radius) {
+    for (radius = 2; radius < WORLD_MAX_WIDTH + WORLD_MAX_HEIGHT; ++radius) {
         int offsets[4][2] = {{radius, 0}, {-radius, 0}, {0, radius}, {0, -radius}};
         int i;
 
