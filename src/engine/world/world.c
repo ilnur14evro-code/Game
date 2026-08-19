@@ -41,7 +41,7 @@ void world_init(World *world, int width, int height) {
     }
     if (!world_is_walkable(world, enemy_position.x, enemy_position.y)) {
         enemy_position.x = player_position.x;
-        enemy_position.y = player_position.y;
+        enemy_position.y = player_position.y + 1;
     }
 
     world->enemy = entity_store_create(&world->entities, enemy_position);
@@ -52,22 +52,4 @@ int world_is_walkable(const World *world, int x, int y) {
         return 0;
     }
     return world->tiles[y][x] != '#';
-}
-
-int world_try_move_player(World *world, int dx, int dy) {
-    Position current;
-    Position next;
-
-    if (world == 0 || !entity_store_get_position(&world->entities, world->player, &current)) {
-        return 0;
-    }
-
-    next.x = current.x + dx;
-    next.y = current.y + dy;
-
-    if (!world_is_walkable(world, next.x, next.y)) {
-        return 0;
-    }
-
-    return entity_store_set_position(&world->entities, world->player, next);
 }
