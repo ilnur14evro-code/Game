@@ -1,18 +1,16 @@
 #include "engine/core/game.h"
 
 #include "engine/command/command.h"
-#include "engine/render/render.h"
 #include "engine/turn/turn.h"
 
-int game_init(Game *game, Terminal *terminal) {
-    if (game == 0 || terminal == 0) {
+int game_init(Game *game) {
+    if (game == 0) {
         return 0;
     }
 
-    game->terminal = terminal;
     game->finished = 0;
     world_init(&game->world, 20, 10);
-    render_game(game->terminal, &game->world);
+    render_world(&game->world, &game->render_buffer);
     return 1;
 }
 
@@ -36,6 +34,13 @@ int game_process_key(Game *game, Key key) {
         return 1;
     }
 
-    render_game(game->terminal, &game->world);
+    render_world(&game->world, &game->render_buffer);
     return 1;
+}
+
+const RenderBuffer *game_render_buffer(const Game *game) {
+    if (game == 0) {
+        return 0;
+    }
+    return &game->render_buffer;
 }
