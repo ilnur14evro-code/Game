@@ -2,6 +2,7 @@
 #define GAME_ENGINE_TURN_TURN_H
 
 #include "engine/command/command.h"
+#include "engine/event/event_queue.h"
 #include "engine/world/world.h"
 
 typedef enum {
@@ -16,7 +17,6 @@ typedef struct {
 } TurnManager;
 
 void turn_manager_init(TurnManager *manager);
-int turn_manager_process(TurnManager *manager, World *world, Command command);
-int turn_process_command(World *world, Command command);
+int turn_manager_process(TurnManager *manager, World *world, Command command, EventQueue *events);
 
 #endif
