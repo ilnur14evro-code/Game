@@ -7,6 +7,8 @@ static int world_in_bounds(const World *world, int x, int y) {
 void world_init(World *world, int width, int height) {
     int x;
     int y;
+    Position player_position;
+    Position enemy_position;
 
     if (world == 0) {
         return;
@@ -19,14 +21,30 @@ void world_init(World *world, int width, int height) {
 
     world->width = width;
     world->height = height;
-    world->player.x = width / 2;
-    world->player.y = height / 2;
+    entity_store_init(&world->entities);
 
     for (y = 0; y < height; ++y) {
         for (x = 0; x < width; ++x) {
-            world->tiles[y][x] = (x == 0 || y == 0 || x == width - 1 || y == height - 1) ? '#' : '.';
+            world->tiles[y][x] =
+                (x == 0 || y == 0 || x == width - 1 || y == height - 1) ? '#' : '.';
         }
     }
+
+    player_position.x = width / 2;
+    player_position.y = height / 2;
+    world->player = entity_store_create(&world->entities, player_position);
+
+    enemy_position.x = player_position.x + 2;
+    enemy_position.y = player_position.y;
+    if (!world_is_walkable(world, enemy_position.x, enemy_position.y)) {
+        enemy_position.x = player_position.x - 2;
+    }
+    if (!world_is_walkable(world, enemy_position.x, enemy_position.y)) {
+        enemy_position.x = player_position.x;
+        enemy_position.y = player_position.y;
+    }
+
+    world->enemy = entity_store_create(&world->entities, enemy_position);
 }
 
 int world_is_walkable(const World *world, int x, int y) {
@@ -37,21 +55,19 @@ int world_is_walkable(const World *world, int x, int y) {
 }
 
 int world_try_move_player(World *world, int dx, int dy) {
-    int next_x;
-    int next_y;
+    Position current;
+    Position next;
 
-    if (world == 0) {
+    if (world == 0 || !entity_store_get_position(&world->entities, world->player, &current)) {
         return 0;
     }
 
-    next_x = world->player.x + dx;
-    next_y = world->player.y + dy;
+    next.x = current.x + dx;
+    next.y = current.y + dy;
 
-    if (!world_is_walkable(world, next_x, next_y)) {
+    if (!world_is_walkable(world, next.x, next.y)) {
         return 0;
     }
 
-    world->player.x = next_x;
-    world->player.y = next_y;
-    return 1;
+    return entity_store_set_position(&world->entities, world->player, next);
 }
