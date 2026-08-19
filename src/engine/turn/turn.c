@@ -22,8 +22,17 @@ static int player_command(World *world, Command command) {
     }
 }
 
-int turn_process_command(World *world, Command command) {
-    if (world == 0) {
+void turn_manager_init(TurnManager *manager) {
+    if (manager == 0) {
+        return;
+    }
+
+    manager->phase = TURN_PHASE_PLAYER;
+    manager->turn_number = 0;
+}
+
+int turn_manager_process(TurnManager *manager, World *world, Command command) {
+    if (manager == 0 || world == 0 || manager->phase != TURN_PHASE_PLAYER) {
         return 0;
     }
 
@@ -31,6 +40,17 @@ int turn_process_command(World *world, Command command) {
         return 0;
     }
 
+    manager->phase = TURN_PHASE_ENEMY;
     (void)ai_system_take_enemy_turn(world);
+
+    manager->phase = TURN_PHASE_COMPLETE;
+    manager->turn_number += 1;
+    manager->phase = TURN_PHASE_PLAYER;
     return 1;
+}
+
+int turn_process_command(World *world, Command command) {
+    TurnManager manager;
+    turn_manager_init(&manager);
+    return turn_manager_process(&manager, world, command);
 }
