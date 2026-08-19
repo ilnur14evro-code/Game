@@ -26,6 +26,8 @@ void render_buffer_clear(RenderBuffer *buffer, int width, int height, char fill)
 void render_world(const World *world, RenderBuffer *buffer) {
     int x;
     int y;
+    Position player;
+    Position enemy;
 
     if (world == 0 || buffer == 0) {
         return;
@@ -39,8 +41,15 @@ void render_world(const World *world, RenderBuffer *buffer) {
         }
     }
 
-    if (world->player.x >= 0 && world->player.x < buffer->width &&
-        world->player.y >= 0 && world->player.y < buffer->height) {
-        buffer->cells[world->player.y][world->player.x] = '@';
+    if (entity_store_get_position(&world->entities, world->player, &player) &&
+        player.x >= 0 && player.x < buffer->width &&
+        player.y >= 0 && player.y < buffer->height) {
+        buffer->cells[player.y][player.x] = '@';
+    }
+
+    if (entity_store_get_position(&world->entities, world->enemy, &enemy) &&
+        enemy.x >= 0 && enemy.x < buffer->width &&
+        enemy.y >= 0 && enemy.y < buffer->height) {
+        buffer->cells[enemy.y][enemy.x] = 'g';
     }
 }
