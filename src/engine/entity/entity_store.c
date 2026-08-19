@@ -57,3 +57,21 @@ int entity_store_set_position(EntityStore *store, EntityId id, Position position
     store->positions[id] = position;
     return 1;
 }
+
+int entity_store_find_at(const EntityStore *store, Position position, EntityId *entity) {
+    int i;
+
+    if (store == 0 || entity == 0) {
+        return 0;
+    }
+
+    for (i = 1; i < ENTITY_MAX; ++i) {
+        if (store->alive[i] && store->positions[i].x == position.x &&
+            store->positions[i].y == position.y) {
+            *entity = (EntityId)i;
+            return 1;
+        }
+    }
+
+    return 0;
+}
