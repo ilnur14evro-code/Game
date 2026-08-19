@@ -2,8 +2,9 @@
 #define GAME_ENGINE_SYSTEM_MOVEMENT_MOVEMENT_H
 
 #include "engine/entity/entity_store.h"
+#include "engine/event/event_queue.h"
 #include "engine/world/world.h"
 
-int movement_system_move(World *world, EntityStore *store, EntityId entity, int dx, int dy);
+int movement_system_move(World *world, EntityStore *store, EntityId entity, int dx, int dy, EventQueue *events);
 
 #endif
