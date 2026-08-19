@@ -1,7 +1,6 @@
 #include "engine/core/game.h"
 
 #include "engine/command/command.h"
-#include "engine/turn/turn.h"
 
 int game_init(Game *game) {
     if (game == 0) {
@@ -9,6 +8,7 @@ int game_init(Game *game) {
     }
 
     game->finished = 0;
+    turn_manager_init(&game->turn_manager);
     world_init(&game->world, 20, 10);
     render_world(&game->world, &game->render_buffer);
     return 1;
@@ -30,7 +30,7 @@ int game_process_key(Game *game, Key key) {
         return 1;
     }
 
-    if (!turn_process_command(&game->world, command)) {
+    if (!turn_manager_process(&game->turn_manager, &game->world, command)) {
         return 1;
     }
 
