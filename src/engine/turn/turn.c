@@ -1,19 +1,18 @@
 #include "engine/turn/turn.h"
 
-int turn_process_command(World *world, Command command) {
-    if (world == 0) {
-        return 0;
-    }
+#include "engine/system/ai/ai.h"
+#include "engine/system/movement/movement.h"
 
+static int player_command(World *world, Command command) {
     switch (command.type) {
         case COMMAND_MOVE_UP:
-            return world_try_move_player(world, 0, -1);
+            return movement_system_move(world, &world->entities, world->player, 0, -1);
         case COMMAND_MOVE_DOWN:
-            return world_try_move_player(world, 0, 1);
+            return movement_system_move(world, &world->entities, world->player, 0, 1);
         case COMMAND_MOVE_LEFT:
-            return world_try_move_player(world, -1, 0);
+            return movement_system_move(world, &world->entities, world->player, -1, 0);
         case COMMAND_MOVE_RIGHT:
-            return world_try_move_player(world, 1, 0);
+            return movement_system_move(world, &world->entities, world->player, 1, 0);
         case COMMAND_WAIT:
             return 1;
         case COMMAND_NONE:
@@ -21,4 +20,17 @@ int turn_process_command(World *world, Command command) {
         default:
             return 0;
     }
+}
+
+int turn_process_command(World *world, Command command) {
+    if (world == 0) {
+        return 0;
+    }
+
+    if (!player_command(world, command)) {
+        return 0;
+    }
+
+    (void)ai_system_take_enemy_turn(world);
+    return 1;
 }
