@@ -2,7 +2,7 @@
 #define GAME_ENGINE_ENTITY_ENTITY_STORE_H
 
 #include "engine/entity/entity.h"
-#include "engine/world/world.h"
+#include "engine/entity/position.h"
 
 typedef struct {
     int alive[ENTITY_MAX];
