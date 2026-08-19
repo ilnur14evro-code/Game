@@ -16,7 +16,6 @@ typedef struct {
 } World;
 
 void world_init(World *world, int width, int height);
-int world_try_move_player(World *world, int dx, int dy);
 int world_is_walkable(const World *world, int x, int y);
 
 #endif
