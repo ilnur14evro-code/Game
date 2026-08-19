@@ -8,6 +8,7 @@
 typedef enum {
     TURN_PHASE_PLAYER = 0,
     TURN_PHASE_ENEMY,
+    TURN_PHASE_EVENTS,
     TURN_PHASE_COMPLETE
 } TurnPhase;
 
