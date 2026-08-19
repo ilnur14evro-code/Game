@@ -14,8 +14,9 @@ int main(void) {
     assert(entity_store_get_position(&world.entities, world.player, &position) == 1);
     assert(position.x == 6);
 
-    assert(movement_system_move(&world, &world.entities, world.player, -100, 0) == 0);
-    assert(position.x == 6 || entity_store_get_position(&world.entities, world.player, &position));
+    assert(movement_system_move(&world, &world.entities, world.player, 0, -100) == 0);
+    assert(entity_store_get_position(&world.entities, world.player, &position) == 1);
+    assert(position.x == 6);
 
     return 0;
 }
