@@ -14,5 +14,6 @@ EntityId entity_store_create(EntityStore *store, Position position);
 int entity_store_is_alive(const EntityStore *store, EntityId id);
 int entity_store_get_position(const EntityStore *store, EntityId id, Position *position);
 int entity_store_set_position(EntityStore *store, EntityId id, Position position);
+int entity_store_find_at(const EntityStore *store, Position position, EntityId *entity);
 
 #endif
