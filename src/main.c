@@ -1,4 +1,4 @@
-#include "engine/core/game.h"
+#include "game/game.h"
 #include "platform/terminal/input.h"
 #include "platform/terminal/terminal.h"
 
