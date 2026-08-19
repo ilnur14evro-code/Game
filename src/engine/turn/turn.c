@@ -1,5 +1,6 @@
 #include "engine/turn/turn.h"
 
+#include "engine/system/ai/ai.h"
 #include "engine/system/movement/movement.h"
 
 static int player_command(World *world, Command command, EventQueue *events) {
@@ -21,6 +22,22 @@ static int player_command(World *world, Command command, EventQueue *events) {
     }
 }
 
+static void dispatch_event(Event *event) {
+    if (event == 0) {
+        return;
+    }
+
+    switch (event->type) {
+        case EVENT_ENTITY_MOVED:
+        case EVENT_ENTITY_ATTACKED:
+        case EVENT_ENTITY_DAMAGED:
+        case EVENT_ENTITY_DIED:
+        case EVENT_NONE:
+        default:
+            break;
+    }
+}
+
 void turn_manager_init(TurnManager *manager) {
     if (manager == 0) {
         return;
@@ -31,6 +48,8 @@ void turn_manager_init(TurnManager *manager) {
 }
 
 int turn_manager_process(TurnManager *manager, World *world, Command command, EventQueue *events) {
+    Event event;
+
     if (manager == 0 || world == 0 || events == 0 || manager->phase != TURN_PHASE_PLAYER) {
         return 0;
     }
@@ -40,6 +59,13 @@ int turn_manager_process(TurnManager *manager, World *world, Command command, Ev
     }
 
     manager->phase = TURN_PHASE_ENEMY;
+    (void)ai_system_take_enemy_turn(world, events);
+
+    manager->phase = TURN_PHASE_EVENTS;
+    while (event_queue_pop(events, &event)) {
+        dispatch_event(&event);
+    }
+
     manager->phase = TURN_PHASE_COMPLETE;
     manager->turn_number += 1;
     manager->phase = TURN_PHASE_PLAYER;
