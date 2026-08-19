@@ -29,6 +29,13 @@ void world_init(World *world, int width, int height) {
     }
 }
 
+int world_is_walkable(const World *world, int x, int y) {
+    if (world == 0 || !world_in_bounds(world, x, y)) {
+        return 0;
+    }
+    return world->tiles[y][x] != '#';
+}
+
 int world_try_move_player(World *world, int dx, int dy) {
     int next_x;
     int next_y;
@@ -40,7 +47,7 @@ int world_try_move_player(World *world, int dx, int dy) {
     next_x = world->player.x + dx;
     next_y = world->player.y + dy;
 
-    if (!world_in_bounds(world, next_x, next_y) || world->tiles[next_y][next_x] == '#') {
+    if (!world_is_walkable(world, next_x, next_y)) {
         return 0;
     }
 
