@@ -15,14 +15,17 @@ PLATFORM_SRCS = \
 	src/platform/terminal/terminal.c \
 	src/platform/terminal/input.c
 
-.PHONY: all game test clean
+.PHONY: all game test architecture-check clean
 
 all: game
 
 game: $(ENGINE_SRCS) $(PLATFORM_SRCS) src/main.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-test: entity-test world-test command-test movement-test turn-test ai-test render-test
+test: architecture-check entity-test world-test command-test movement-test turn-test ai-test render-test
+
+architecture-check:
+	! grep -R -nE '#include[[:space:]]+"platform/terminal/|#include[[:space:]]+<termios\.h>|#include[[:space:]]+<unistd\.h>' src/engine
 
 entity-test: tests/entity_store_test.c src/engine/entity/entity_store.c
 	$(CC) $(CFLAGS) $^ -o entity_store_test
