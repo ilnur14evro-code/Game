@@ -18,7 +18,8 @@ int main(void) {
     assert(entity_store_get_position(&world.entities, world.player, &player) == 1);
     assert(player.x == 6);
     assert(entity_store_get_position(&world.entities, world.enemy, &enemy_after) == 1);
-    assert(enemy_after.x == enemy_before.x - 1);
+    assert(enemy_after.x == enemy_before.x);
+    assert(enemy_after.y == enemy_before.y);
 
     command.type = COMMAND_WAIT;
     assert(turn_process_command(&world, command) == 1);
